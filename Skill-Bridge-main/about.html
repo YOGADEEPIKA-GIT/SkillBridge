@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <title>About | Skill Bridge</title>
+
+</head>
+
+<body>
+    
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav__logo">
+      <a href="index.html" class="logo">Skill<span>Bridge</span></a>
+    </div>
+
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">Our Path</a></li>
+      <li><a href="internships.html">Internships</a></li>
+      <li><a href="mentors.html">Mentors</a></li>
+      <li><a href="apply.html" class="btn primary">Apply Now</a></li>
+      <li><a href="my-applications.html" class="btn secondary">My Apps</a></li>
+    </ul>
+  </nav>
+ <section class="about-hero ">
+    <div class="about-overlay"></div>
+
+    <div class="about-content reveal">
+        <h1>Building Careers Through Digital Internships</h1>
+
+        <p>
+            SkillBridge helps students gain real-world industry experience,
+            connect with mentors, and land high-quality internships from
+            leading companies.
+        </p>
+
+        <div class="about-buttons">
+            <a href="internships.html" class="hero-btn primary">
+                Explore Internships
+            </a>
+
+            <a href="register.html" class="hero-btn secondary">
+                Join SkillBridge
+            </a>
+        </div>
+    </div>
+</section>
+<section class="stats reveal">
+
+    <div class="stat-card">
+        <h2 class="counter" data-target="500">0</h2>
+        <p>Students Placed</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 class="counter" data-target="120">0</h2>
+        <p>Internships Available</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 class="counter" data-target="40">0</h2>
+        <p>Partner Companies</p>
+    </div>
+
+    <div class="stat-card">
+        <h2 class="counter" data-target="95">0</h2>
+        <p>Success Rate</p>
+    </div>
+
+</section>
+
+  <!-- ABOUT SECTION -->
+  <section class="steps">
+    <h2>How It Works</h2>
+
+    <div class="steps__grid">
+
+      <div class="steps__card reveal">
+        <span><i class="ri-user-line"></i></span>
+        <h4>Create Profile</h4>
+        <p>Register and build your profile with skills and interests.</p>
+      </div>
+
+      <div class="steps__card reveal">
+        <span><i class="ri-search-line"></i></span>
+        <h4>Explore Internships</h4>
+        <p>Browse internships based on your skills and domain.</p>
+      </div>
+
+      <div class="steps__card reveal">
+        <span><i class="ri-send-plane-line"></i></span>
+        <h4>Apply Easily</h4>
+        <p>Submit applications with one click and track status.</p>
+      </div>
+
+      <div class="steps__card reveal">
+        <span><i class="ri-award-line"></i></span>
+        <h4>Get Certified</h4>
+        <p>Complete internship and earn certificates.</p>
+      </div>
+
+    </div>
+  </section>
+  <script>
+const user = localStorage.getItem("user");
+
+if(!user){
+    window.location.href = "login.html";
+}
+const counters = document.querySelectorAll(".counter");
+
+counters.forEach(counter => {
+
+    counter.innerText = "0";
+
+    const updateCounter = () => {
+
+        const target = +counter.getAttribute("data-target");
+
+        const current = +counter.innerText;
+
+        const increment = target / 100;
+
+        if(current < target){
+
+            counter.innerText = `${Math.ceil(current + increment)}`;
+
+            setTimeout(updateCounter, 20);
+
+        } else {
+
+            counter.innerText = target + "+";
+
+        }
+    };
+
+    updateCounter();
+});
+ScrollReveal().reveal('.reveal', {
+    distance: '80px',
+    duration: 1500,
+    origin: 'bottom',
+    interval: 200,
+    reset: false
+});
+</script>
+
+</body>
+</html>

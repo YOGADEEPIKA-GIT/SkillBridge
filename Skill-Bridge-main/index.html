@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Skill Bridge | Digital Talent Platform</title>
+
+</head>
+
+<body>
+  <div id="chat-icon-wrapper" onclick="toggleChatWindow()">
+    <i class="ri-robot-2-line"></i>
+  </div>
+
+  <div id="chatbot-window">
+    <iframe src="chatbot.html"></iframe>
+  </div>
+  <nav>
+    <div class="nav__header">
+      <div class="nav__logo">
+        <a href="#" class="logo">Skill<span>Bridge</span></a>
+      </div>
+      <div class="nav__menu__btn" id="menu-btn">
+        <i class="ri-menu-line"></i>
+      </div>
+    </div>
+    <ul class="nav__links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">Our Path</a></li>
+      <li><a href="internships.html">Internships</a></li>
+      <li><a href="mentors.html">Mentors</a></li>
+      <li><a href="apply.html" class="btn primary" id="applyNav">Apply Now</a></li>
+      <li><a href="my-applications.html" class="btn secondary" id="myAppsNav">My Apps</a></li>
+      <a href="admin.html" id="adminNav" style="display:none;">
+        Admin
+      </a>
+    </ul>
+
+    <div id="auth-section">
+      <span id="userName"></span>
+
+
+      <a href="login.html" class="btn">Login</a>
+      <a href="register.html" class="btn primary">Register</a>
+
+
+      <button id="logoutBtn" class="btn" onclick="logout()">Logout</button>
+    </div>
+    <button onclick="toggleDarkMode()" class="btn dark-btn">
+      🌙
+    </button>
+  </nav>
+
+  <div id="chat-trigger" onclick="toggleChatWindow()">
+    <i class="ri-robot-2-line"></i>
+  </div>
+
+
+
+  <header class="section__container header__container" id="home">
+
+
+    <h2>
+      Bridging the Gap Between Learning & Industry
+    </h2>
+    <h1>Elevate Your Career with<br /><span>Digital Internships</span></h1>
+    <p>
+      Skill Bridge helps students and freshers land high-impact internships.
+      Gain real-world experience, mentorship, and industry-recognized certificates.
+    </p>
+    <div class="header__btns">
+      <a href="internships.html" class="btn">Explore Domains</a>
+      <a href="about.html">
+        <span><i class="ri-play-fill"></i></span>
+        How it Works?
+      </a>
+    </div>
+  </header>
+
+
+
+  <section class="section__container features__container">
+    <div class="features__content">
+      <h2 class="section__header" style="text-align: center;">
+        Why <span>Skill Bridge?</span>
+      </h2>
+      <div class="features__grid_new">
+        <div class="feature__item">
+          <span><i class="ri-checkbox-circle-fill" style="color: #6a38c2;"></i></span>
+          <div>
+            <h4>Hands-on Training</h4>
+            <p>Work on live repositories and real deployment environments.</p>
+          </div>
+        </div>
+        <div class="feature__item">
+          <span><i class="ri-checkbox-circle-fill" style="color: #6a38c2;"></i></span>
+          <div>
+            <h4>L.O.R & Certification</h4>
+            <p>Earn industry credentials and letters of recommendation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="section__container footer__container">
+      <div class="footer__col">
+        <div class="footer__logo">
+          <a href="#" class="logo">Skill<span>Bridge</span></a>
+        </div>
+        <p>Empowering the next generation of digital talent through quality internships and hands-on training.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Domains</h4>
+        <ul class="footer__links">
+          <li><a href="#">Web Development</a></li>
+          <li><a href="#">App Development</a></li>
+          <li><a href="#">Digital Marketing</a></li>
+          <li><a href="#">UI/UX Design</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Support</h4>
+        <ul class="footer__links">
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bar">
+      Copyright © 2026 Skill Bridge. Built for Digital Talent.
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const authContainer = document.getElementById("auth-section");
+
+    if (user) {
+      authContainer.innerHTML = `
+    <span style="margin-right:10px;">
+      Hi, ${user.name || user.email}
+    </span>
+
+    <button onclick="logout()" class="btn">
+      Logout
+    </button>
+  `;
+    } else {
+
+      authContainer.innerHTML = `
+    <a href="login.html" class="btn">Login</a>
+    <a href="register.html" class="btn">Register</a>
+  `;
+    }
+
+    function logout() {
+
+      localStorage.removeItem("user");
+
+      window.location.href = "login.html";
+    }
+
+  </script>
+  <script>
+
+    function toggleChatWindow() {
+
+      const chatWindow =
+        document.getElementById("chatbot-window");
+
+      chatWindow.classList.toggle("active");
+    }
+
+
+    function toggleDarkMode() {
+
+      document.body.classList.toggle("dark-mode");
+
+      localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark-mode")
+      );
+    }
+
+    if (localStorage.getItem("darkMode") === "true") {
+
+      document.body.classList.add("dark-mode");
+    }
+
+    const currentUser =
+      JSON.parse(localStorage.getItem("user"));
+
+    const adminNav =
+      document.getElementById("adminNav");
+
+    const applyNav =
+      document.getElementById("applyNav");
+
+    if (
+      currentUser &&
+      currentUser.email === "admin@skillbridge.com"
+    ) {
+
+      adminNav.style.display = "inline-block";
+
+      applyNav.style.display = "none";
+
+      document.getElementById("myAppsNav").style.display = "none";
+
+    } else {
+
+      adminNav.style.display = "none";
+    }
+
+
+  </script>
+
+  <script src="main.js"></script>
+
+</body>
+
+</html>

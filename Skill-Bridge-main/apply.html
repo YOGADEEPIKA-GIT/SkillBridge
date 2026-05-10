@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="apply.css">
+    <title>Professional Application | Skill Bridge</title>
+
+</head>
+
+<body>
+    <nav style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+">
+
+        <h2 style="color:#6a38c2;">
+            SkillBridge
+        </h2>
+
+        <div style="display:flex;gap:20px;">
+
+            <a href="index.html">Home</a>
+
+            <a href="internships.html">
+                Internships
+            </a>
+
+            <a href="my-applications.html">
+                My Applications
+            </a>
+
+            <a href="admin.html">
+                Admin
+            </a>
+
+        </div>
+
+    </nav>
+    <script>
+        const user = localStorage.getItem("user");
+
+        if (!user) {
+            alert("Please login first!");
+            window.location.href = "login.html";
+        }
+    </script>
+    <div class="apply__page__wrapper">
+        <div class="apply__container">
+            <div class="apply__info">
+                <div class="apply__logo">
+                    <a href="index.html" class="logo">Skill<span>Bridge</span></a>
+                </div>
+                <h2>Start Your <br><span>Tech Career</span> Here.</h2>
+                <ul class="benefit__list">
+                    <li><i class="ri-checkbox-circle-fill"></i> Industry Recognized Certificate</li>
+                    <li><i class="ri-checkbox-circle-fill"></i> Direct Mentorship from Experts</li>
+                    <li><i class="ri-checkbox-circle-fill"></i> Hands-on Live Projects</li>
+                </ul>
+                <div class="info__footer">
+                    <p>Need help? <a href="#">Contact Support</a></p>
+                </div>
+            </div>
+
+
+            <div class="apply__form__box">
+                <form id="applyForm" class="actual__form">
+                    <h2 style="color:#6a38c2; margin-bottom:10px;">
+                        Internship Application
+                    </h2>
+
+                    <h3 id="selectedInternshipText" style="margin-bottom:25px;color:#555;">
+                    </h3>
+                    <h3>Personal Details</h3>
+                    <div class="input__row">
+                        <div class="input__group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="input__group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="Enter your email address" required>
+                        </div>
+                    </div>
+
+                    <div class="input__row">
+                        <div class="input__group">
+                            <label>Phone Number</label>
+                            <input type="tel" placeholder="Enter 10-digit mobile number" required>
+                        </div>
+                        <div class="input__group">
+                            <label>Select Your Internship Domain</label>
+                            <select required>
+                                <option value="" disabled selected>Choose a specialized track</option>
+                                <optgroup label="Web & Mobile Development">
+                                    <option value="frontend-react">Frontend Developer (React.js / Next.js)</option>
+                                    <option value="backend-node">Backend Developer (Node.js / Express)</option>
+                                    <option value="fullstack-mern">Full Stack Developer (MERN Stack)</option>
+                                    <option value="mobile-flutter">Mobile App Developer (Flutter / Dart)</option>
+                                </optgroup>
+                                <optgroup label="Zoho & Business Automation">
+                                    <option value="zoho-creator">Zoho Creator Developer (Deluge Scripting)</option>
+                                    <option value="zoho-crm">Zoho CRM Implementation Specialist</option>
+                                    <option value="zoho-analytics">Zoho Analytics & BI Specialist</option>
+                                </optgroup>
+                                <optgroup label="Data, AI & Machine Learning">
+                                    <option value="ai-engineer">AI Engineer (Generative AI / LLMs)</option>
+                                    <option value="ml-engineer">Machine Learning Engineer</option>
+                                    <option value="data-scientist">Data Scientist</option>
+                                </optgroup>
+                                <optgroup label="Design & Operations">
+                                    <option value="uiux-design">UI/UX Designer (Figma / Adobe XD)</option>
+                                    <option value="cloud-aws">Cloud Engineer (AWS)</option>
+                                    <option value="cyber-security">Cyber Security Analyst</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h3>Professional Links</h3>
+                    <div class="input__group">
+                        <label>GitHub or Portfolio URL</label>
+                        <input type="url" placeholder="Paste your profile or project link">
+                    </div>
+
+                    <div class="file__upload__area">
+                        <i class="ri-upload-cloud-2-line"></i>
+                        <p>Click to upload Resume (PDF only)</p>
+                        <input type="file" id="resumeUpload" accept=".pdf" hidden>
+                        <label for="resumeUpload" class="upload__btn">Browse Files</label>
+                    </div>
+
+
+
+
+                    <div class="action__btns">
+                        <button type="submit" class="submit__btn">Submit Application</button>
+                        <a href="index.html" class="cancel__btn">Cancel</a>
+                    </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+    <script>
+
+        const internshipId = localStorage.getItem("selectedInternshipId");
+
+        async function loadSelectedInternship() {
+
+            const response =
+                await fetch("http://localhost:8080/api/internships");
+
+            const internships =
+                await response.json();
+
+            const internship =
+                internships.find(
+                    i => i.id == internshipId
+                );
+
+            if (internship) {
+
+                document.getElementById(
+                    "selectedInternshipText"
+                ).innerText =
+                    "Applying For: " + internship.title;
+
+            } else {
+
+                document.getElementById(
+                    "selectedInternshipText"
+                ).innerText =
+                    "Internship Not Found";
+            }
+        }
+
+        loadSelectedInternship();
+
+
+        document.getElementById("applyForm").addEventListener("submit", async function (e) {
+
+            e.preventDefault();
+
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            if (!user) {
+                alert("Please login first!");
+                window.location.href = "login.html";
+                return;
+            }
+
+            const studentId = user.id;
+
+            const data = {
+                studentId: studentId,
+                internshipId: internshipId
+            };
+
+            try {
+
+                const response = await fetch("http://localhost:8080/api/applications/apply", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.text();
+
+                if (response.ok) {
+                    alert("✅ Application Submitted!");
+                } else {
+
+                    if (result.includes("Already applied")) {
+                        alert("⚠️ You have already applied");
+                    } else {
+                        alert("❌ Something went wrong");
+                    }
+                }
+
+            } catch (error) {
+
+                console.error(error);
+                alert("❌ Server not reachable");
+            }
+        });
+
+    </script>
+    <script>
+
+        const resumeInput =
+            document.getElementById("resumeUpload");
+
+        const uploadArea =
+            document.querySelector(".file__upload__area");
+
+        resumeInput.addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (file) {
+
+                uploadArea.innerHTML = `
+
+        <i class="ri-file-pdf-2-fill"
+        style="
+        font-size:50px;
+        color:#6a38c2;
+        "></i>
+
+        <p style="
+        margin-top:10px;
+        font-weight:bold;
+        color:#111827;
+        ">
+        ${file.name}
+        </p>
+
+        <p style="
+        color:green;
+        font-weight:600;
+        ">
+        ✅ Resume Uploaded Successfully
+        </p>
+
+        <button
+        type="button"
+        id="previewResumeBtn"
+        style="
+        margin-top:15px;
+        padding:10px 18px;
+        background:#6a38c2;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        ">
+        Preview Resume
+        </button>
+
+        `;
+
+                document
+                    .getElementById("previewResumeBtn")
+                    .addEventListener("click", function () {
+
+                        const fileURL =
+                            URL.createObjectURL(file);
+
+                        window.open(fileURL, "_blank");
+                    });
+            }
+        });
+
+    </script>
+</body>
+
+</html>

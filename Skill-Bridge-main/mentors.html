@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+
+  <title>Mentors | Skill Bridge</title>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav__logo">
+      <a href="index.html" class="logo">Skill<span>Bridge</span></a>
+    </div>
+
+    <ul class="nav__links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">Our Path</a></li>
+      <li><a href="internships.html">Internships</a></li>
+      <li><a href="mentors.html">Mentors</a></li>
+      <li><a href="apply.html" class="btn primary">Apply Now</a></li>
+      <li><a href="my-applications.html" class="btn secondary">My Apps</a></li>
+    </ul>
+  </nav>
+
+  <!-- MENTORS SECTION -->
+  <section class="section__container">
+  <h2 class="section__header">Meet Our Mentors</h2>
+
+  <div class="mentor__grid">
+
+    <div class="mentor__card">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg">
+      <h4>Priya Sharma</h4>
+      <p>Senior Software Engineer @ Google</p>
+    </div>
+
+    <div class="mentor__card">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg">
+      <h4>Rahul Verma</h4>
+      <p>Backend Developer @ Amazon</p>
+    </div>
+
+    <div class="mentor__card">
+      <img src="https://randomuser.me/api/portraits/women/68.jpg">
+      <h4>Ananya Iyer</h4>
+      <p>UI/UX Designer @ Figma</p>
+    </div>
+
+    <div class="mentor__card">
+      <img src="https://randomuser.me/api/portraits/men/75.jpg">
+      <h4>Karthik R</h4>
+      <p>Cloud Engineer @ Microsoft</p>
+    </div>
+
+  </div>
+</section>
+<script>
+const user = localStorage.getItem("user");
+
+if(!user){
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

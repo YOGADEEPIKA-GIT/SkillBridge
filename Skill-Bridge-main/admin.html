@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h2 {
+            color: #6a38c2;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: gray;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body style="font-family:Arial;background:#f5f5f5;padding:30px;">
+
+    <nav style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:white;
+box-shadow:0 2px 10px rgba(0,0,0,0.1);
+">
+
+        <h2 style="color:#6a38c2;">
+            SkillBridge
+        </h2>
+
+        <div style="display:flex;gap:20px;">
+
+            <a href="index.html">Home</a>
+
+            <a href="internships.html">
+                Internships
+            </a>
+
+            <a href="my-applications.html">
+                My Applications
+            </a>
+
+            <a href="admin.html">
+                Admin
+            </a>
+
+        </div>
+
+    </nav>
+
+    <section class="admin-form-section">
+
+        <h2 class="admin-title">
+            Add New Internship
+        </h2>
+
+        <form id="internshipForm" class="internship-form">
+
+            <input type="text" id="title" placeholder="Internship Title" required />
+
+            <input type="text" id="company" placeholder="Company Name" required />
+
+            <input type="text" id="location" placeholder="Location" required />
+
+            <input type="text" id="stipend" placeholder="Stipend" required />
+            <input type="text" id="skills" placeholder="Skills Required" required />
+
+            <textarea id="description" placeholder="Internship Description" required></textarea>
+
+            <button type="submit">
+                Add Internship
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <h1 style="text-align:center;color:#6a38c2;">
+        Admin Dashboard
+    </h1>
+
+    <div style="
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+max-width:1000px;
+margin:30px auto;
+">
+
+        <div class="stat-card">
+            <h2 id="totalApps">0</h2>
+            <p>Total Applications</p>
+        </div>
+
+        <div class="stat-card">
+            <h2 id="selectedCount">0</h2>
+            <p>Selected Students</p>
+        </div>
+
+        <div class="stat-card">
+            <h2 id="rejectedCount">0</h2>
+            <p>Rejected Applications</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>6</h2>
+            <p>Active Internships</p>
+        </div>
+
+    </div>
+
+    <div id="applicationsContainer" style="max-width:900px;margin:auto;">
+    </div>
+
+    <script>
+
+        const user =
+            JSON.parse(localStorage.getItem("user"));
+
+        if (
+            !user ||
+            user.email !== "admin@skillbridge.com"
+        ) {
+            window.location.href = "index.html";
+        }
+
+        async function loadApplications() {
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:8080/api/applications"
+                );
+
+                const data = await response.json();
+                const internshipResponse = await fetch(
+                    "http://localhost:8080/api/internships"
+                );
+
+                const internships =
+                    await internshipResponse.json();
+
+                animateValue(
+                    "totalApps",
+                    data.length
+                );
+
+                animateValue(
+                    "selectedCount",
+                    data.filter(app => app.status === "SELECTED").length
+                );
+
+                animateValue(
+                    "rejectedCount",
+                    data.filter(app => app.status === "REJECTED").length
+                );
+
+
+
+                let html = "";
+
+                data.forEach(app => {
+
+                    html += `
+            
+            <div style="
+                background:white;
+                padding:20px;
+                margin:20px 0;
+                border-radius:15px;
+                box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            ">
+
+                <h3>Application #${app.id}</h3>
+
+                <p>
+                <b>Student ID:</b> ${app.studentId}
+                </p>
+
+                <p>
+                <b>Internship:</b>
+                    ${internships.find(
+                        i => i.id === app.internshipId
+                    )?.title || "Internship Deleted"
+                        }
+                    </p>
+
+                <div style="margin-top:10px;">
+
+    <b>Status:</b>
+
+</div>
+
+<span style="
+    display:inline-block;
+    margin-top:8px;
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-weight:bold;
+
+    background:
+    ${app.status === 'APPLIED' ? '#f39c12' :
+                            app.status === 'SELECTED' ? '#27ae60' :
+                                app.status === 'REJECTED' ? '#e74c3c' :
+                                    '#3498db'};
+">
+    ${app.status}
+</span>
+
+                <div style="margin-top:15px;">
+
+                    <button onclick="updateStatus(${app.id}, 'SHORTLISTED')"
+                    style="
+                    padding:10px 15px;
+                    background:#3498db;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                    cursor:pointer;
+                    ">
+                    Shortlist
+                    </button>
+
+                    <button onclick="updateStatus(${app.id}, 'SELECTED')"
+                    style="
+                    padding:10px 15px;
+                    background:#27ae60;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                    cursor:pointer;
+                    margin-left:10px;
+                    ">
+                    Select
+                    </button>
+
+                    <button onclick="updateStatus(${app.id}, 'REJECTED')"
+                    style="
+                    padding:10px 15px;
+                    background:#e74c3c;
+                    color:white;
+                    border:none;
+                    border-radius:8px;
+                    cursor:pointer;
+                    margin-left:10px;
+                    ">
+                    Reject
+                    </button>
+
+                    <button
+onclick="editInternship(${app.internshipId})"
+style="
+margin-left:10px;
+padding:10px 18px;
+background:#f59e0b;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+">
+Edit
+</button>
+
+                    <button
+onclick="deleteInternship(${app.internshipId})"
+style="
+padding:10px 15px;
+background:#111827;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-left:10px;
+">
+Delete Internship
+</button>
+
+                </div>
+
+            </div>
+            `;
+                });
+
+                document.getElementById("applicationsContainer").innerHTML = html;
+
+            } catch (error) {
+
+                console.error(error);
+                alert("Failed to load applications");
+            }
+        }
+
+        async function updateStatus(id, status) {
+
+            try {
+
+                const response = await fetch(
+                    `http://localhost:8080/api/applications/status/${id}?status=${status}`,
+                    {
+                        method: "PUT"
+                    }
+                );
+
+                if (response.ok) {
+
+                    alert("Status Updated!");
+
+                    loadApplications();
+
+                } else {
+
+                    alert("Failed");
+                }
+
+            } catch (error) {
+
+                console.error(error);
+                alert("Server Error");
+            }
+        }
+
+        async function deleteInternship(id) {
+
+            const confirmDelete =
+                confirm("Delete this internship?");
+
+            if (!confirmDelete) return;
+
+            try {
+
+                const response = await fetch(
+                    `http://localhost:8080/api/internships/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+                if (response.ok) {
+
+                    showToast("🗑 Internship Deleted");
+
+                    loadApplications();
+
+                } else {
+
+                    showToast("❌ Failed to delete");
+                }
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast("❌ Server Error");
+            }
+        }
+
+        loadApplications();
+
+        function animateValue(id, endValue) {
+
+            let startValue = 0;
+
+            const duration = 1000;
+
+            const increment =
+                endValue / (duration / 20);
+
+            const counter =
+                setInterval(() => {
+
+                    startValue += increment;
+
+                    if (startValue >= endValue) {
+
+                        startValue = endValue;
+
+                        clearInterval(counter);
+                    }
+
+                    document.getElementById(id).innerText =
+                        Math.floor(startValue);
+
+                }, 20);
+        }
+
+
+        document.getElementById("internshipForm")
+            .addEventListener("submit", async function (e) {
+
+                e.preventDefault();
+
+                const internship = {
+
+                    title: document.getElementById("title").value,
+
+                    company: document.getElementById("company").value,
+
+                    location: document.getElementById("location").value,
+
+                    stipend: document.getElementById("stipend").value,
+
+                    description: document.getElementById("description").value,
+
+                    skillsRequired:
+                        document.getElementById("skills").value
+                };
+                try {
+
+                    const editingId =
+                        localStorage.getItem("editingInternshipId");
+
+                    let url =
+                        "http://localhost:8080/api/internships";
+
+                    let method = "POST";
+
+                    if (editingId) {
+
+                        url =
+                            "http://localhost:8080/api/internships/" +
+                            editingId;
+
+                        method = "PUT";
+                    }
+
+                    const response = await fetch(
+                        url,
+                        {
+                            method: method,
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(internship)
+                        }
+                    );
+
+                    if (response.ok) {
+
+                        showToast(
+                            editingId
+                                ? "✏️ Internship Updated"
+                                : "✅ Internship Added"
+                        );
+
+                        document.getElementById(
+                            "internshipForm"
+                        ).reset();
+
+                        localStorage.removeItem(
+                            "editingInternshipId"
+                        );
+
+                        loadApplications();
+
+                    } else {
+
+                        showToast("❌ Failed");
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showToast("❌ Server Error");
+                }
+            });
+
+    </script>
+    <script>
+
+        function showToast(message) {
+
+            const toast =
+                document.createElement("div");
+
+            toast.className = "toast";
+
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+
+                toast.remove();
+
+            }, 3000);
+        }
+
+        async function editInternship(id) {
+
+            const response =
+                await fetch(
+                    "http://localhost:8080/api/internships"
+                );
+
+            const internships =
+                await response.json();
+
+            const internship =
+                internships.find(i => i.id === id);
+
+            if (!internship) {
+                showToast("Internship Not Found");
+                return;
+            }
+
+            document.getElementById("title").value =
+                internship.title;
+
+            document.getElementById("company").value =
+                internship.company;
+
+            document.getElementById("location").value =
+                internship.location;
+
+            document.getElementById("stipend").value =
+                internship.stipend;
+
+            document.getElementById("skills").value =
+                internship.skillsRequired;
+
+            document.getElementById("description").value =
+                internship.description;
+
+            localStorage.setItem(
+                "editingInternshipId",
+                id
+            );
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+            showToast("✏️ Editing Internship");
+        }
+
+    </script>
+</body>
+
+</html>
